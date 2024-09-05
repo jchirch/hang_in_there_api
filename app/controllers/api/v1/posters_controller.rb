@@ -1,28 +1,35 @@
 class Api::V1::PostersController < ApplicationController
 
-    def index
-        render json: PosterSerializer.render_all_posters(Poster.all)
-    end
+  def index
+    # render json: PosterSerializer.render_all_posters(Poster.all)
+    posters = Poster.all
+    render json: PosterSerializer.new(posters)
+  end
 
-    def show
-      poster = Poster.find(params[:id])
-      render json: PosterSerializer.render_poster(poster)
-    end
+	def show
+		poster = Poster.find(params[:id])
+		render json: PosterSerializer.new(poster)
+	#   render json: PosterSerializer.render_poster(poster)
+	end
 
-    def update
-        poster = Poster.find(params[:id])
-        poster.update!(poster_params)
-        render json: PosterSerializer.render_poster(poster)
-    end
+	def update
+		poster = Poster.find(params[:id])
+		render json: PosterSerializer.new(poster)
+		poster.update!(poster)
 
-    def destroy
-        render json: Poster.delete(params[:id])
-        head :no_content
-    end
+		# poster = Poster.find(params[:id])
+		# poster.update!(poster_params)
+		# render json: PosterSerializer.render_poster(poster)
+	end
 
-    private
+	def destroy
+		render json: Poster.delete(params[:id])
+		head :no_content
+	end
 
-    def poster_params
-        params.permit(:name, :description, :price, :year, :vintage, :img_url)
-    end
+	private
+
+	def poster_params
+		params.permit(:name, :description, :price, :year, :vintage, :img_url)
+	end
 end

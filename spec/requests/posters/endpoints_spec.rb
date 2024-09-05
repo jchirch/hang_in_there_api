@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Poster Endpoints" do 
   before (:each) do 
-    Poster.create!(name: "REGRET",
+    @regret_poster = Poster.create!(name: "REGRET",
                description: "Hard work rarely pays off.",
                price: 89.00,
                year: 2018,
@@ -34,7 +34,7 @@ RSpec.describe "Poster Endpoints" do
 
   describe 'Verbs' do 
 
-    it 'can retrive all posters' do 
+    it 'can retrieve all posters' do 
 
       get "/api/v1/posters"
       
@@ -43,9 +43,16 @@ RSpec.describe "Poster Endpoints" do
       posters = JSON.parse(response.body, symbolize_names: true)
       expect(posters.count).to eq(4)
       
-      posters.each do |poster| 
+      posters.each do |poster_object| 
+        poster = poster_object[:data]
+      
         expect(poster).to have_key(:id)
         expect(poster[:id]).to be_an(Integer)
+
+        expect(poster).to have_key(:type)
+        expect(poster[:type]).to be_a(String)
+       
+        poster = poster[:attributes]
 
         expect(poster).to have_key(:name)
         expect(poster[:name]).to be_an(String)
@@ -65,6 +72,40 @@ RSpec.describe "Poster Endpoints" do
         expect(poster).to have_key(:img_url)
         expect(poster[:img_url]).to be_a(String)
       end
+    end
+
+    it 'can update a poster' do
+      patch "/api/v1/posters/#{@regret_poster.id}", params: {name: "More Regret"}
+
+      expect(response).to be_successful
+
+      poster = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(poster[:type]).to eq("poster")
+      
+      expect(poster).to have_key(:id)
+      expect(poster[:id]).to be_an(Integer)
+      
+      poster = poster[:attributes]
+      expect(poster[:name]).to eq("More Regret")
+
+      expect(poster).to have_key(:name)
+      expect(poster[:name]).to be_an(String)
+
+      expect(poster).to have_key(:description)
+      expect(poster[:description]).to be_a(String)
+
+      expect(poster).to have_key(:price)
+      expect(poster[:price]).to be_a(Float)
+
+      expect(poster).to have_key(:year)
+      expect(poster[:year]).to be_an(Integer)
+
+      expect(poster).to have_key(:vintage)
+      expect(poster[:vintage]).to be_in([true, false])
+
+      expect(poster).to have_key(:img_url)
+      expect(poster[:img_url]).to be_a(String)
     end
   end
 end

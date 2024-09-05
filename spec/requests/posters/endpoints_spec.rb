@@ -40,7 +40,7 @@ RSpec.describe "Poster Endpoints" do
       expect(response).to be_successful
 
       posters = JSON.parse(response.body, symbolize_names: true)
-      binding.pry
+
       expect(posters.count).to eq(4)
       
       posters.each do |poster_object| 
@@ -142,19 +142,44 @@ RSpec.describe "Poster Endpoints" do
     end
 
     it 'can destroy a poster' do
-    
-      # isolate 1 poster
-      # check it's attributes.
-      # run delete verb
-      # check that all attributes are nil
-      #
-      #
-      # delete "/api/v1/posters/#{@lonely_poster.id}"
+ 
+      get "/api/v1/posters/#{@lonely_poster.id}"
 
       expect(response).to be_successful
 
-      poster = JSON.parse(response.body, symbolize_names: true)
-require 'pry'; binding.pry
+      expect(Poster.count).to eq(4)
+
+      poster = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(poster[:type]).to eq("poster")
+
+      expect(poster).to have_key(:id)
+      expect(poster[:id]).to be_an(Integer)
+      
+      poster = poster[:attributes]
+
+      expect(poster).to have_key(:name)
+      expect(poster[:name]).to be_an(String)
+
+      expect(poster).to have_key(:description)
+      expect(poster[:description]).to be_a(String)
+
+      expect(poster).to have_key(:price)
+      expect(poster[:price]).to be_a(Float)
+
+      expect(poster).to have_key(:year)
+      expect(poster[:year]).to be_an(Integer)
+
+      expect(poster).to have_key(:vintage)
+      expect(poster[:vintage]).to be_in([true, false])
+
+      expect(poster).to have_key(:img_url)
+      expect(poster[:img_url]).to be_a(String)
+
+      delete "/api/v1/posters/#{@lonely_poster.id}"
+      expect(Poster.count).to eq(3)
+
+      expect(response.status).to eq(204)
     end
   end
 end

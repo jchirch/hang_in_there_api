@@ -11,6 +11,10 @@ class Api::V1::PostersController < ApplicationController
         render json: PosterSerializer.render_poster(poster)
     end
 
+    def destroy
+        render json: Poster.delete(params[:id])
+    end
+
     private
 
     def poster_params

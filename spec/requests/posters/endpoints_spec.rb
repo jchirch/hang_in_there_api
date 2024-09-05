@@ -107,5 +107,9 @@ RSpec.describe "Poster Endpoints" do
       expect(poster).to have_key(:img_url)
       expect(poster[:img_url]).to be_a(String)
     end
+
+    it 'can destroy a poster' do
+      
+    end
   end
 end

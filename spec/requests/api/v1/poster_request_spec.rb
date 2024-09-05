@@ -107,6 +107,38 @@ RSpec.describe "Poster Endpoints" do
       expect(poster[:img_url]).to be_a(String)
     end
 
+    it 'can create a poster' do 
+      expect(Poster.count).to eq(4)
+
+      poster_params = {
+        name: "DESPAIR",
+        description: "Sometimes the light at the end of the tunnel is just an oncoming train.",
+        price: 28.50,
+        year: 1993,
+        vintage: true,
+        img_url: "https://i.kym-cdn.com/photos/images/newsfeed/001/505/145/07e.jpg"
+      }
+
+      post "/api/v1/posters", params: poster_params, as: :json
+      created_poster = Poster.last
+
+      expect(response).to be_successful
+      expect(Poster.count).to eq(5)
+      # expect(response.code).to eq(200)
+      
+      
+      response_body = JSON.parse(response.body)
+      expect(created_poster.name).to eq(poster_params[:name])
+      expect(created_poster.description).to eq(poster_params[:description])
+      expect(created_poster.price).to eq(poster_params[:price])
+      expect(created_poster.year).to eq(poster_params[:year])
+      expect(created_poster.vintage).to eq(poster_params[:vintage])
+      expect(created_poster.img_url).to eq(poster_params[:img_url])
+    
+    end
+    
+    it 'can update a poster' do
+
     xit 'can update a poster' do
       patch "/api/v1/posters/#{@regret_poster.id}", params: {name: "More Regret"}
 

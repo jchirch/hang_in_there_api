@@ -106,4 +106,45 @@ RSpec.describe 'Model classes' do
       expect(Poster.count).to eq(result[:meta][:count])
     end
   end
+
+  describe 'filter results' do 
+    it 'can filter by name' do 
+
+      expected = {
+        data: [
+            {
+                id: @existentialism_poster.id.to_s,
+                type: "poster",
+                attributes: {
+                    name: @existentialism_poster.name,
+                    description: @existentialism_poster.description,
+                    price: @existentialism_poster.price,
+                    year: @existentialism_poster.year,
+                    vintage: @existentialism_poster.vintage,
+                    img_url: @existentialism_poster.img_url
+                }
+            },
+            {
+                id: @lonely_poster.id.to_s,
+                type: "poster",
+                attributes: {
+                    name: @lonely_poster.name,
+                    description: @lonely_poster.description,
+                    price: @lonely_poster.price,
+                    year: @lonely_poster.year,
+                    vintage: @lonely_poster.vintage,
+                    img_url: @lonely_poster.img_url
+                }
+            }
+        ],
+        meta: {"count": 2}
+      }
+
+      get "/api/v1/posters?name=li"
+
+      expect(response).to be_successful
+      result = JSON.parse(response.body, symbolize_names: true)
+      expect(result).to eq(expected)
+    end
+  end
 end

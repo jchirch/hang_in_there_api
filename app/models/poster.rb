@@ -9,4 +9,9 @@ class Poster < ApplicationRecord
       Poster.all
     end
   end
+
+  def self.filter_name(name)
+    Poster.where("name ILIKE '%name%").order()
+  end
 end
+

@@ -84,13 +84,26 @@ RSpec.describe 'Model classes' do
                     img_url: @lonely_poster.img_url
                 }
             }
-        ]
+        ],
+        meta: {"count": 4}
       }
+      
       get "/api/v1/posters?sort=asc"
       expect(response).to be_successful
       result = JSON.parse(response.body, symbolize_names: true)
 
       expect(result).to eq(expected)
+    end
+  end
+
+  describe 'meta count' do
+    it 'meta value equal to record' do
+
+      get "/api/v1/posters"
+      expect(response).to be_successful
+      result = JSON.parse(response.body, symbolize_names: true)
+
+      expect(Poster.count).to eq(result[:meta][:count])
     end
   end
 end

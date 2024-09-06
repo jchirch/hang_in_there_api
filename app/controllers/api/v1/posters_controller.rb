@@ -8,7 +8,7 @@ class Api::V1::PostersController < ApplicationController
     elsif params[:name]
       posters = Poster.filter_name(name)
     else
-      Posters.all
+      posters = Poster.all
     end
 		options = {}
 		options[:meta] = { count: Poster.count }

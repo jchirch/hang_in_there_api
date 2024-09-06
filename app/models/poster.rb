@@ -11,7 +11,9 @@ class Poster < ApplicationRecord
   end
 
   def self.filter_name(name)
-    Poster.where("name ILIKE '%name%").order()
+    Poster.where("name ILIKE '%#{name}%'").order(name: :asc)
   end
+
+
 end
 

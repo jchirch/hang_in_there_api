@@ -31,8 +31,7 @@ RSpec.describe "Poster Endpoints" do
                img_url:  "https://i.kym-cdn.com/entries/icons/mobile/000/026/213/pablo.jpg")
   end
 
-  describe 'Verbs' do 
-
+  describe 'HTTP methods' do 
     it 'can retrieve all posters' do 
 
       get "/api/v1/posters"
@@ -44,11 +43,9 @@ RSpec.describe "Poster Endpoints" do
       expect(posters.count).to eq(4)
       
       posters.each do |poster| 
-        # require 'pry'; binding.pry
-       
       
         expect(poster).to have_key(:id)
-        expect(poster[:id].to_i).to be_an(Integer)
+        expect(poster[:id]).to be_a(String)
 
         expect(poster).to have_key(:type)
         expect(poster[:type]).to be_a(String)
@@ -83,9 +80,9 @@ RSpec.describe "Poster Endpoints" do
       poster = JSON.parse(response.body, symbolize_names: true)[:data]
 
       expect(poster[:type]).to eq("poster")
-# require 'pry'; binding.pry
+
       expect(poster).to have_key(:id)
-      expect(poster[:id].to_i).to be_an(Integer)
+      expect(poster[:id]).to be_a(String)
       
       poster = poster[:attributes]
 
@@ -125,10 +122,9 @@ RSpec.describe "Poster Endpoints" do
 
       expect(response).to be_successful
       expect(Poster.count).to eq(5)
-      # expect(response.code).to eq(200)
-      
       
       response_body = JSON.parse(response.body)
+
       expect(created_poster.name).to eq(poster_params[:name])
       expect(created_poster.description).to eq(poster_params[:description])
       expect(created_poster.price).to eq(poster_params[:price])
@@ -137,8 +133,6 @@ RSpec.describe "Poster Endpoints" do
       expect(created_poster.img_url).to eq(poster_params[:img_url])
     
     end
-    
-    # it 'can update a poster' do
 
     it 'can update a poster' do
       patch "/api/v1/posters/#{@regret_poster.id}", params: {name: "More Regret"}
@@ -150,7 +144,7 @@ RSpec.describe "Poster Endpoints" do
       expect(poster[:type]).to eq("poster")
       
       expect(poster).to have_key(:id)
-      expect(poster[:id].to_i).to be_an(Integer)
+      expect(poster[:id]).to be_a(String)
       
       poster = poster[:attributes]
       expect(poster[:name]).to eq("More Regret")
@@ -179,15 +173,13 @@ RSpec.describe "Poster Endpoints" do
       get "/api/v1/posters/#{@lonely_poster.id}"
 
       expect(response).to be_successful
-
       expect(Poster.count).to eq(4)
 
       poster = JSON.parse(response.body, symbolize_names: true)[:data]
 
       expect(poster[:type]).to eq("poster")
-
       expect(poster).to have_key(:id)
-      expect(poster[:id].to_i).to be_an(Integer)
+      expect(poster[:id]).to be_a(String)
       
       poster = poster[:attributes]
 
@@ -210,8 +202,8 @@ RSpec.describe "Poster Endpoints" do
       expect(poster[:img_url]).to be_a(String)
 
       delete "/api/v1/posters/#{@lonely_poster.id}"
-      expect(Poster.count).to eq(3)
 
+      expect(Poster.count).to eq(3)
       expect(response.status).to eq(204)
     end
   end

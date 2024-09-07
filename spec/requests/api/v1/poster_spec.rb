@@ -32,12 +32,11 @@ RSpec.describe 'Model classes' do
   end
 
   describe 'Sort_results' do
-    
-    it 'can sort by created_at asc' do 
+    it 'can sort by ascending order' do 
       expected = {
         data: [
             {
-                id: @regret_poster.id.to_s, # Use the actual id from the created record
+                id: @regret_poster.id.to_s,
                 type: "poster",
                 attributes: {
                     name: @regret_poster.name,
@@ -49,7 +48,7 @@ RSpec.describe 'Model classes' do
                 }
             },
             {
-                id: @doom_poster.id.to_s, # Same here
+                id: @doom_poster.id.to_s,
                 type: "poster",
                 attributes: {
                     name: @doom_poster.name,
@@ -96,11 +95,75 @@ RSpec.describe 'Model classes' do
     end
   end
 
+  it 'can sort by descending order' do 
+    expected = {
+      data: [
+          { 
+              id: @lonely_poster.id.to_s,
+              type: "poster",
+              attributes: {
+                  name: @lonely_poster.name,
+                  description: @lonely_poster.description,
+                  price: @lonely_poster.price,
+                  year: @lonely_poster.year,
+                  vintage: @lonely_poster.vintage,
+                  img_url: @lonely_poster.img_url
+              }
+          },
+          {
+              id: @existentialism_poster.id.to_s,
+              type: "poster",
+              attributes: {
+                  name: @existentialism_poster.name,
+                  description: @existentialism_poster.description,
+                  price: @existentialism_poster.price,
+                  year: @existentialism_poster.year,
+                  vintage: @existentialism_poster.vintage,
+                  img_url: @existentialism_poster.img_url
+              }
+          },
+          {
+              id: @doom_poster.id.to_s,
+              type: "poster",
+              attributes: {
+                  name: @doom_poster.name,
+                  description: @doom_poster.description,
+                  price: @doom_poster.price,
+                  year: @doom_poster.year,
+                  vintage: @doom_poster.vintage,
+                  img_url: @doom_poster.img_url
+              }
+          },
+          {
+              id: @regret_poster.id.to_s,
+              type: "poster",
+              attributes: {
+                  name: @regret_poster.name,
+                  description: @regret_poster.description,
+                  price: @regret_poster.price,
+                  year: @regret_poster.year,
+                  vintage: @regret_poster.vintage,
+                  img_url: @regret_poster.img_url
+              }
+          }
+      ],
+      meta: {"count": 4}
+    }
+
+    get "/api/v1/posters?sort=desc"
+    expect(response).to be_successful
+    result = JSON.parse(response.body, symbolize_names: true)
+
+    expect(result).to eq(expected)
+  end
+
   describe 'meta count' do
     it 'meta value equal to record' do
 
       get "/api/v1/posters"
+
       expect(response).to be_successful
+
       result = JSON.parse(response.body, symbolize_names: true)
 
       expect(Poster.count).to eq(result[:meta][:count])
@@ -143,7 +206,9 @@ RSpec.describe 'Model classes' do
       get "/api/v1/posters?name=li"
 
       expect(response).to be_successful
+
       result = JSON.parse(response.body, symbolize_names: true)
+
       expect(result).to eq(expected)
     end
 
@@ -151,7 +216,7 @@ RSpec.describe 'Model classes' do
       expected = {
         data: [
             {
-                id: @regret_poster.id.to_s, # Use the actual id from the created record
+                id: @regret_poster.id.to_s,
                 type: "poster",
                 attributes: {
                     name: @regret_poster.name,
@@ -163,7 +228,7 @@ RSpec.describe 'Model classes' do
                 }
             },
             {
-                id: @doom_poster.id.to_s, # Same here
+                id: @doom_poster.id.to_s,
                 type: "poster",
                 attributes: {
                     name: @doom_poster.name,
